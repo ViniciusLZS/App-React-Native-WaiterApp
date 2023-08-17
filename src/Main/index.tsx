@@ -36,6 +36,7 @@ export function Main() {
         </S.MenuContainer>
 
       </S.Container>
+
       <S.Footer>
         <S.FooterContainer>
           {!selectedTable && (
