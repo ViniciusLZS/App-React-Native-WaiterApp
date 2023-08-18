@@ -1,5 +1,5 @@
 import { ActivityIndicator } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import * as S from './styles';
 
@@ -10,20 +10,34 @@ import { Menu } from '../components/Menu';
 import { TableModal } from '../components/TableModal';
 import { Cart } from '../components/Cart';
 
-import { CartItem } from '../types/cartItem';
 import { Product } from '../types/Product';
+import { Category } from '../types/Category';
+import { CartItem } from '../types/cartItem';
 
-import { products as mockProducts } from '../mocks/products';
+import { api } from '../utils/api';
+
 import { Empty } from '../components/Icons/Empty';
 import { Text } from '../components/Text';
-
 
 export function Main() {
   const [isTableModaVisible, setIsTableModaVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState('');
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoading] = useState(false);
-  const [products] = useState<Product[]>(mockProducts);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+
+  useEffect(() => {
+    Promise.all([
+      api.get('/categories'),
+      api.get('/products'),
+    ]).then(([ categoryResponse, productResponse ]) => {
+      setCategories(categoryResponse.data);
+      setProducts(productResponse.data);
+      setIsLoading(false);
+    });
+  }, []);
 
   function handleSaveTable(table: string) {
     setSelectedTable(table);
@@ -32,6 +46,18 @@ export function Main() {
   function handleResetOrder() {
     setSelectedTable('');
     setCartItems([]);
+  }
+
+  async function handleSelectCategory(categoryId: string) {
+    const route = !categoryId
+      ? '/products'
+      : `/categories/${categoryId}/products`;
+
+    setIsLoadingProducts(true);
+
+    const { data } = await api.get(route);
+    setProducts(data);
+    setIsLoadingProducts(false);
   }
 
   function handleAddToCart(product: Product) {
@@ -94,30 +120,39 @@ export function Main() {
           onCancelOrder={handleResetOrder}
         />
 
-        {isLoading && (
+        {isLoading ? (
           <S.CenteredContainer>
             <ActivityIndicator color="#D73035" size='large'/>
           </S.CenteredContainer>
-        )}
-
-        {!isLoading && (
+        ) : (
           <>
             <S.CategoriesContainer>
-              <Categories />
+              <Categories
+                onSelectCategory={handleSelectCategory}
+                categories={categories}
+              />
             </S.CategoriesContainer>
 
-            {products.length > 0 ? (
-              <S.MenuContainer>
-                <Menu
-                  onAddToCart={handleAddToCart}
-                  products={products}
-                />
-              </S.MenuContainer>
-            ) : (
+            {isLoadingProducts ? (
               <S.CenteredContainer>
-                <Empty />
-                <Text color="#666" style={{ marginTop: 24 }}>Nenhum produto foi encontrado!</Text>
+                <ActivityIndicator color="#D73035" size='large'/>
               </S.CenteredContainer>
+            ): (
+              <>
+                {products.length > 0 ? (
+                  <S.MenuContainer>
+                    <Menu
+                      onAddToCart={handleAddToCart}
+                      products={products}
+                    />
+                  </S.MenuContainer>
+                ) : (
+                  <S.CenteredContainer>
+                    <Empty />
+                    <Text color="#666" style={{ marginTop: 24 }}>Nenhum produto foi encontrado!</Text>
+                  </S.CenteredContainer>
+                )}
+              </>
             )}
           </>
         )}
@@ -137,6 +172,7 @@ export function Main() {
 
           {selectedTable && (
             <Cart
+              selectedTable={selectedTable}
               cartItems={cartItems}
               onAdd={handleAddToCart}
               onDecrement={handleDecrementCartItem}

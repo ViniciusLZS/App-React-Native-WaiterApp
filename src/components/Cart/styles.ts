@@ -9,11 +9,7 @@ export const Item = styled.View`
 
 export const ProductContainer = styled.View`
   flex-direction: row;
-`;
-
-export const Actions = styled.View`
-  flex-direction: row;
-  gap: 24px;
+  flex: 1;
 `;
 
 export const Image = styled.Image`
@@ -29,6 +25,12 @@ export const QuantityContainer = styled.View`
 
 export const ProductDetails = styled.View`
   gap: 4px;
+  flex: 1;
+`;
+
+export const Actions = styled.View`
+  flex-direction: row;
+  gap: 24px;
 `;
 
 export const Summary = styled.View`
