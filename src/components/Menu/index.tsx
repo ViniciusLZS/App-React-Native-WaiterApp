@@ -3,8 +3,6 @@ import { useState } from 'react';
 
 import * as S from './styles';
 
-import { products } from '../../mocks/products';
-
 import { Text } from '../Text';
 import { PlusCircle } from '../Icons/PlusCircle';
 import { ProductModal } from '../ProductModal';
@@ -14,9 +12,10 @@ import { Product } from '../../types/Product';
 
 interface MenuProps {
   onAddToCart: (product: Product) => void;
+  products: Product[];
 }
 
-export function Menu({ onAddToCart }: MenuProps) {
+export function Menu({ onAddToCart, products }: MenuProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
