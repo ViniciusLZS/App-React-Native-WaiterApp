@@ -10,8 +10,7 @@
 
 <h2>:rocket: Aprendizados:</h2>
 <p>
-  Ao completar o curso e concluir o desenvolvimento de um aplicativo voltado para garçons,
-  utilizando um conjunto diversificado de tecnologias listadas abaixo, obtive uma sólida compreensão prática dessas ferramentas de ponta. 
+  Ao concluir o desenvolvimento de um aplicativo voltado para garçons, utilizando um conjunto diversificado de tecnologias listadas abaixo, obtive uma sólida compreensão prática dessas ferramentas de ponta. 
   Através do uso do React e React Native, adquiri habilidades para criar interfaces de usuário interativas e responsivas tanto para plataformas web quanto mobile.
   A integração do Express me permitiu construir uma infraestrutura de back-end, possibilitando a comunicação eficiente entre o cliente e o servidor.
   Além disso, a experiência com MongoDB me proporcionou insights valiosos sobre o armazenamento e recuperação eficiente de dados. Ao explorar o Styled Components, aprimorei minha capacidade de estilizar os elementos de forma modular e elegante.
